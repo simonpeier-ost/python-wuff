@@ -30,7 +30,7 @@ def parse_arguments():
 
 
 def find(args):
-    matching_dogs = (dog[2] for dog in dog_list if dog[1] == args.name)
+    matching_dogs = ([dog[1], dog[2], dog[4][0]] for dog in dog_list if dog[1] == args.name)
     print(list(matching_dogs))
 
 
