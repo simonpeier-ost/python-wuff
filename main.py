@@ -16,5 +16,10 @@ def fetch_file(year):
     return dogs
 
 
+def find(args):
+    matching_dogs = (dog[2] for dog in dog_list if dog[1] == args.name)
+    print(list(matching_dogs))
+
+
 if __name__ == '__main__':
     dog_list = fetch_file(2015)
