@@ -1,5 +1,8 @@
 import argparse
 import csv
+import pathlib
+import random
+import shutil
 from collections import Counter
 
 import requests
@@ -30,8 +33,44 @@ def parse_arguments():
     parser_stats = subparsers.add_parser("stats")
     parser_stats.set_defaults(func=stats)
 
+    parser_create = subparsers.add_parser("create")
+    parser_create.add_argument('-o', '--output-dir', type=str, default=None)
+    parser_create.set_defaults(func=create_new_dog)
+
     args = parser.parse_args()
     args.func(args)
+
+
+def download_dog_media_file(name, year, path):
+    # Get link of random dog media file
+    res = requests.get("https://random.dog/woof.json").json()
+    media_url = res['url']
+
+    # Download said dog media file
+    file_extension = pathlib.Path(media_url).suffix
+    filename = f"{name}_{year}{file_extension}"
+    out_path = (pathlib.Path(path) if path else pathlib.Path.cwd()) / filename
+    res = requests.get(media_url, stream=True)
+    if res.status_code == 200:
+        with open(out_path, 'wb') as file:
+            res.raw.decode_content = True
+            shutil.copyfileobj(res.raw, file)
+
+    return out_path
+
+
+def create_new_dog(args):
+    name = random.choice([dog[1] for dog in dog_list])
+    year = random.choice([dog[2] for dog in dog_list])
+    sex = random.choice(['m', 'f'])
+    path = args.output_dir
+    media_filename = download_dog_media_file(name, year, path)
+
+    print("Here's your new dog!")
+    print(f"Name: {name}")
+    print(f"Birth year: {year}")
+    print(f"Sex: {sex}")
+    print(f"The image of the new dog can be found here: {media_filename}")
 
 
 def find(args):
