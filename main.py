@@ -40,13 +40,18 @@ def find(args):
 
 
 def stats(args):
-    overall = (dog[1] for dog in dog_list)
-    male = (dog[1] for dog in dog_list if dog[3] == 1)
-    female = (dog[1] for dog in dog_list if dog[3] == 2)
+    overall = [dog[1] for dog in dog_list]
+    male = [dog[1] for dog in dog_list if dog[3] == 1]
+    female = [dog[1] for dog in dog_list if dog[3] == 2]
+
+    # TODO: shortest dog name
+    print(f"Longest name: {max(overall, key=len)}")
     print("10 most common names")
     print(f"Overall: {Counter(overall).most_common(10)}")
     print(f"Male: {Counter(male).most_common(10)}")
     print(f"Female: {Counter(female).most_common(10)}")
+    print(f"Number of male dogs: {len(male)}")
+    print(f"Number of female dogs: {len(female)}")
 
 
 if __name__ == '__main__':
