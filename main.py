@@ -1,3 +1,4 @@
+import argparse
 import csv
 import requests
 
@@ -16,6 +17,18 @@ def fetch_file(year):
     return dogs
 
 
+def parse_arguments():
+    parser = argparse.ArgumentParser()
+    subparsers = parser.add_subparsers()
+
+    parser_find = subparsers.add_parser("find")
+    parser_find.add_argument('name', type=str)
+    parser_find.set_defaults(func=find)
+
+    args = parser.parse_args()
+    args.func(args)
+
+
 def find(args):
     matching_dogs = (dog[2] for dog in dog_list if dog[1] == args.name)
     print(list(matching_dogs))
@@ -23,3 +36,4 @@ def find(args):
 
 if __name__ == '__main__':
     dog_list = fetch_file(2015)
+    parse_arguments()
