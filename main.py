@@ -27,19 +27,20 @@ def parse_arguments():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers()
 
-    parser_find = subparsers.add_parser("find")
+    parser_find = subparsers.add_parser("find", help="find all dogs matching a name")
     parser_find.add_argument("name", type=str)
     parser_find.add_argument("-y", "--year", type=int, default=datetime.datetime.now().year,
                              help="year to get data from")
     parser_find.set_defaults(func=find)
 
-    parser_stats = subparsers.add_parser("stats")
+    parser_stats = subparsers.add_parser("stats", help="show various stats about the dogs")
     parser_stats.add_argument("-y", "--year", type=int, default=datetime.datetime.now().year,
                               help="year to get data from")
     parser_stats.set_defaults(func=stats)
 
-    parser_create = subparsers.add_parser("create")
-    parser_create.add_argument("-o", "--output-dir", type=str, default=None)
+    parser_create = subparsers.add_parser("create", help="create a new dog")
+    parser_create.add_argument("-o", "--output-dir", type=str, default=None,
+                               help="directory where the downloaded file should be put")
     parser_create.add_argument("-y", "--year", type=int, default=datetime.datetime.now().year,
                                help="year to get data from")
     parser_create.set_defaults(func=create_new_dog)
