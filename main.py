@@ -85,11 +85,22 @@ def create_new_dog(args):
     print(f"[bold]The image of the new dog can be found here:[/bold] {media_filename}")
 
 
+def print_find_table(row_list):
+    table = Table(title="Matching dogs")
+    table.add_column("Name", style="cyan")
+    table.add_column("Birth year", style="magenta")
+    table.add_column("Sex")
+
+    for element in row_list:
+        table.add_row(str(element[0]), str(element[1]), str(element[2]))
+
+    print(table)
+
+
 def find(args):
     dog_list = fetch_file(args.year)
-
     matching_dogs = ([dog[1], dog[2], dog[4][0]] for dog in dog_list if dog[1] == args.name)
-    print(list(matching_dogs))
+    print_find_table(matching_dogs)
 
 
 def print_most_common_names_table(title, row_list):
