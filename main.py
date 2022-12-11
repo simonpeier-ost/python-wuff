@@ -78,11 +78,11 @@ def create_new_dog(args):
     path = args.output_dir
     media_filename = download_dog_media_file(name, year, path)
 
-    print("Here's your new dog!")
-    print(f"Name: {name}")
-    print(f"Birth year: {year}")
-    print(f"Sex: {sex}")
-    print(f"The image of the new dog can be found here: {media_filename}")
+    print("[bold underline]Here's your new dog![/bold underline] :dog:")
+    print(f"[bold]Name:[/bold] [cyan]{name}[/cyan]")
+    print(f"[bold]Birth year:[/bold] [magenta]{year}[/magenta]")
+    print(f"[bold]Sex:[/bold] {sex}")
+    print(f"[bold]The image of the new dog can be found here:[/bold] {media_filename}")
 
 
 def find(args):
@@ -111,7 +111,7 @@ def stats(args):
     male = [dog[1] for dog in dog_list if dog[3] == 1]
     female = [dog[1] for dog in dog_list if dog[3] == 2]
 
-    print("[bold underline]Statistics[/bold underline]\n")
+    print("[bold underline]Statistics[/bold underline] :bar_chart:\n")
     print(f"[bold]Shortest name:[/bold] [cyan]{min(overall, key=len)}[/cyan]")
     print(f"[bold]Longest name:[/bold] [cyan]{max(overall, key=len)}[/cyan]")
     print(f"[bold]Number of male dogs:[/bold] [not bold magenta]{len(male)}[/not bold magenta]")
