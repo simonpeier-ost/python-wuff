@@ -7,6 +7,8 @@ import shutil
 from collections import Counter
 
 import requests
+from rich import print
+from rich.table import Table
 
 
 def fetch_file(year):
@@ -90,6 +92,18 @@ def find(args):
     print(list(matching_dogs))
 
 
+def print_most_common_names_table(title, row_list):
+    table = Table(title=str(title))
+    table.add_column("Name", style="cyan")
+    table.add_column("Age", style="magenta")
+
+    for element in row_list:
+        table.add_row(str(element[0]), str(element[1]))
+
+    print(table)
+    print("\n")
+
+
 def stats(args):
     dog_list = fetch_file(args.year)
 
@@ -97,14 +111,15 @@ def stats(args):
     male = [dog[1] for dog in dog_list if dog[3] == 1]
     female = [dog[1] for dog in dog_list if dog[3] == 2]
 
-    print(f"Shortest name: {min(overall, key=len)}")
-    print(f"Longest name: {max(overall, key=len)}")
-    print("10 most common names")
-    print(f"Overall: {Counter(overall).most_common(10)}")
-    print(f"Male: {Counter(male).most_common(10)}")
-    print(f"Female: {Counter(female).most_common(10)}")
-    print(f"Number of male dogs: {len(male)}")
-    print(f"Number of female dogs: {len(female)}")
+    print("[bold underline]Statistics[/bold underline]\n")
+    print(f"[bold]Shortest name:[/bold] [cyan]{min(overall, key=len)}[/cyan]")
+    print(f"[bold]Longest name:[/bold] [cyan]{max(overall, key=len)}[/cyan]")
+    print(f"[bold]Number of male dogs:[/bold] [not bold magenta]{len(male)}[/not bold magenta]")
+    print(f"[bold]Number of female dogs:[/bold] [not bold magenta]{len(female)}[/not bold magenta]")
+    print("[bold]10 most common names:[/bold]\n")
+    print_most_common_names_table("Overall", Counter(overall).most_common(10))
+    print_most_common_names_table("Male", Counter(male).most_common(10))
+    print_most_common_names_table("Female", Counter(female).most_common(10))
 
 
 if __name__ == "__main__":
