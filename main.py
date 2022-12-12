@@ -31,19 +31,19 @@ def parse_arguments():
 
     parser_find = subparsers.add_parser("find", help="find all dogs matching a name")
     parser_find.add_argument("name", type=str)
-    parser_find.add_argument("-y", "--year", type=int, default=datetime.datetime.now().year,
+    parser_find.add_argument("-y", "--year", default=datetime.datetime.now().year,
                              help="year to get data from")
     parser_find.set_defaults(func=find)
 
     parser_stats = subparsers.add_parser("stats", help="show various stats about the dogs")
-    parser_stats.add_argument("-y", "--year", type=int, default=datetime.datetime.now().year,
+    parser_stats.add_argument("-y", "--year", default=datetime.datetime.now().year,
                               help="year to get data from")
     parser_stats.set_defaults(func=stats)
 
     parser_create = subparsers.add_parser("create", help="create a new dog")
     parser_create.add_argument("-o", "--output-dir", type=str, default=None,
                                help="directory where the downloaded file should be put")
-    parser_create.add_argument("-y", "--year", type=int, default=datetime.datetime.now().year,
+    parser_create.add_argument("-y", "--year", default=datetime.datetime.now().year,
                                help="year to get data from")
     parser_create.set_defaults(func=create_new_dog)
 
@@ -70,19 +70,22 @@ def download_dog_media_file(name, year, path):
 
 
 def create_new_dog(args):
-    dog_list = fetch_file(args.year)
+    if type(args.year) is int:
+        dog_list = fetch_file(args.year)
 
-    name = random.choice([dog[1] for dog in dog_list])
-    year = random.choice([dog[2] for dog in dog_list])
-    sex = random.choice(["m", "f"])
-    path = args.output_dir
-    media_filename = download_dog_media_file(name, year, path)
+        name = random.choice([dog[1] for dog in dog_list])
+        year = random.choice([dog[2] for dog in dog_list])
+        sex = random.choice(["m", "f"])
+        path = args.output_dir
+        media_filename = download_dog_media_file(name, year, path)
 
-    print("[bold underline]Here's your new dog![/bold underline] :dog:")
-    print(f"[bold]Name:[/bold] [cyan]{name}[/cyan]")
-    print(f"[bold]Birth year:[/bold] [magenta]{year}[/magenta]")
-    print(f"[bold]Sex:[/bold] {sex}")
-    print(f"[bold]The image of the new dog can be found here:[/bold] {media_filename}")
+        print("[bold underline]Here's your new dog![/bold underline] :dog:")
+        print(f"[bold]Name:[/bold] [cyan]{name}[/cyan]")
+        print(f"[bold]Birth year:[/bold] [magenta]{year}[/magenta]")
+        print(f"[bold]Sex:[/bold] {sex}")
+        print(f"[bold]The image of the new dog can be found here:[/bold] {media_filename}")
+    else:
+        print(year_error_message)
 
 
 def print_find_table(row_list):
@@ -98,9 +101,12 @@ def print_find_table(row_list):
 
 
 def find(args):
-    dog_list = fetch_file(args.year)
-    matching_dogs = ([dog[1], dog[2], dog[4][0]] for dog in dog_list if dog[1] == args.name)
-    print_find_table(matching_dogs)
+    if type(args.year) is int:
+        dog_list = fetch_file(args.year)
+        matching_dogs = ([dog[1], dog[2], dog[4][0]] for dog in dog_list if dog[1] == args.name)
+        print_find_table(matching_dogs)
+    else:
+        print(year_error_message)
 
 
 def print_most_common_names_table(title, row_list):
@@ -116,22 +122,26 @@ def print_most_common_names_table(title, row_list):
 
 
 def stats(args):
-    dog_list = fetch_file(args.year)
+    if type(args.year) is int:
+        dog_list = fetch_file(args.year)
 
-    overall = [dog[1] for dog in dog_list if "?" not in dog[1]]
-    male = [dog[1] for dog in dog_list if dog[3] == 1]
-    female = [dog[1] for dog in dog_list if dog[3] == 2]
+        overall = [dog[1] for dog in dog_list if "?" not in dog[1]]
+        male = [dog[1] for dog in dog_list if dog[3] == 1]
+        female = [dog[1] for dog in dog_list if dog[3] == 2]
 
-    print("[bold underline]Statistics[/bold underline] :bar_chart:\n")
-    print(f"[bold]Shortest name:[/bold] [cyan]{min(overall, key=len)}[/cyan]")
-    print(f"[bold]Longest name:[/bold] [cyan]{max(overall, key=len)}[/cyan]")
-    print(f"[bold]Number of male dogs:[/bold] [not bold magenta]{len(male)}[/not bold magenta]")
-    print(f"[bold]Number of female dogs:[/bold] [not bold magenta]{len(female)}[/not bold magenta]")
-    print("[bold]10 most common names:[/bold]\n")
-    print_most_common_names_table("Overall", Counter(overall).most_common(10))
-    print_most_common_names_table("Male", Counter(male).most_common(10))
-    print_most_common_names_table("Female", Counter(female).most_common(10))
+        print("[bold underline]Statistics[/bold underline] :bar_chart:\n")
+        print(f"[bold]Shortest name:[/bold] [cyan]{min(overall, key=len)}[/cyan]")
+        print(f"[bold]Longest name:[/bold] [cyan]{max(overall, key=len)}[/cyan]")
+        print(f"[bold]Number of male dogs:[/bold] [not bold magenta]{len(male)}[/not bold magenta]")
+        print(f"[bold]Number of female dogs:[/bold] [not bold magenta]{len(female)}[/not bold magenta]")
+        print("[bold]10 most common names:[/bold]\n")
+        print_most_common_names_table("Overall", Counter(overall).most_common(10))
+        print_most_common_names_table("Male", Counter(male).most_common(10))
+        print_most_common_names_table("Female", Counter(female).most_common(10))
+    else:
+        print(year_error_message)
 
 
 if __name__ == "__main__":
+    year_error_message = "The entered year is not a number"
     parse_arguments()
