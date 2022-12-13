@@ -37,13 +37,17 @@ def create_new_dog(args):
         year = random.choice([dog[2] for dog in dog_list])
         sex = random.choice(["m", "f"])
         path = args.output_dir
-        media_filename = download_dog_media_file(name, year, path)
 
-        print("[bold underline]Here's your new dog![/bold underline] :dog:")
-        print(f"[bold]Name:[/bold] [cyan]{name}[/cyan]")
-        print(f"[bold]Birth year:[/bold] [magenta]{year}[/magenta]")
-        print(f"[bold]Sex:[/bold] {sex}")
-        print(f"[bold]The image of the new dog can be found here:[/bold] {media_filename}")
+        try:
+            media_filename = download_dog_media_file(name, year, path)
+
+            print("[bold underline]Here's your new dog![/bold underline] :dog:")
+            print(f"[bold]Name:[/bold] [cyan]{name}[/cyan]")
+            print(f"[bold]Birth year:[/bold] [magenta]{year}[/magenta]")
+            print(f"[bold]Sex:[/bold] {sex}")
+            print(f"[bold]The image of the new dog can be found here:[/bold] {media_filename}")
+        except FileNotFoundError:
+            print("The given output directory does not exist")
     else:
         print(year_error_message)
 
@@ -53,7 +57,6 @@ def print_find_table(row_list):
     table.add_column("Name", style="cyan")
     table.add_column("Birth year", style="magenta")
     table.add_column("Sex")
-
     for element in row_list:
         table.add_row(str(element[0]), str(element[1]), str(element[2]))
 
@@ -73,7 +76,6 @@ def print_most_common_names_table(title, row_list):
     table = Table(title=str(title))
     table.add_column("Name", style="cyan")
     table.add_column("Age", style="magenta")
-
     for element in row_list:
         table.add_row(str(element[0]), str(element[1]))
 
