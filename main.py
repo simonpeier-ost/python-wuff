@@ -9,6 +9,7 @@ from collections import Counter
 import requests
 from rich import print
 from rich.table import Table
+from requests.exceptions import ConnectionError
 
 
 def download_dog_media_file(name, year, path):
@@ -109,6 +110,8 @@ def get_dog_list(year):
     except ValueError:
         print("The entered year is not a number")
         return False
+    except ConnectionError:
+        print("Internet connection could not be established")
 
 
 def fetch_file(year):
